@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #weatherContainer {
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="weatherContainer">
+        <h1>Weather App</h1>
+        <form id="weatherForm">
+            <input type="text" id="cityInput" placeholder="Enter city">
+            <button type="submit">Get Weather</button>
+        </form>
+        <div id="weatherInfo">
+            <p>Temperature: 30°C</p>
+            <img src="http://openweathermap.org/img/wn/01d.png" alt="Weather Icon">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('weatherForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var city = document.getElementById('cityInput').value;
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=API_KEY&units=metric`)
+            .then(response => response.json())
+            .then(data => {
+                const iconCode = data.weather[0].icon;
+                const iconUrl = `http://openweathermap.org/img/w/${iconCode}.png`;
+
+                document.getElementById('weatherInfo').innerHTML = `
+                    <p>Temperature: ${data.main.temp}°C</p>
+                    <img src="${iconUrl}" alt="Weather Icon">
+                `;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
